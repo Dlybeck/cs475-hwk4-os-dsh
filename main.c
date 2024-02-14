@@ -29,8 +29,10 @@ int main(int argc, char *argv[]) {
 
 	while(1){
 		printf("dsh> ");
-		scanf("%s", cmdline);
-		processArgs(cmdline);
+		
+		if(fgets(cmdline, MAXBUF, stdin) != NULL){
+			processArgs(cmdline);
+		}
 	}
 
 	return 0;

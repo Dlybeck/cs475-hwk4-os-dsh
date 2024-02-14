@@ -28,5 +28,5 @@ void example(int* x) {
 } 
 
 void processArgs(char* input){
-    printf("%s\n", input);
+    printf("%s", input);
 }
