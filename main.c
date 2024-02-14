@@ -27,5 +27,11 @@ int main(int argc, char *argv[]) {
 
 	char *cmdline = (char*) malloc(MAXBUF); // stores user input from commmand line
 
+	while(1){
+		printf("dsh> ");
+		scanf("%s", cmdline);
+		processArgs(cmdline);
+	}
+
 	return 0;
 }

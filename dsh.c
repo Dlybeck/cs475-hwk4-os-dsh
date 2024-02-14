@@ -24,5 +24,9 @@
  * submission.
  */
 void example(int* x) {
-    *x = thisIsGlobal;
+    //*x = thisIsGlobal;
 } 
+
+void processArgs(char* input){
+    printf("%s\n", input);
+}
