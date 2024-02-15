@@ -31,7 +31,7 @@ void countArgs(int* args, int* maxLen, char* string){
     char* currentChar = string;
     int len = -1;
 
-    while(*currentChar != '\0'){
+    while(*currentChar != '\0' && *currentChar != '\n'){
         if(*currentChar == ' '){
             len = 0;
             if(*(currentChar+1) != ' ') {
@@ -44,10 +44,6 @@ void countArgs(int* args, int* maxLen, char* string){
         }
         currentChar++;
     }
-}
-
-void getArgLength(int* len, char* arg){
-
 }
 
 void processArgs (char* string){
