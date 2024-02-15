@@ -61,18 +61,31 @@ void processArgs (char* string){
     printf("Number of arguments is %d\n", argCount);
     printf("Longest word is %d long\n", len);
 
-    args = (char**)malloc((len + 1)*argCount + 1); //argcount for the \0 in each arg and 1 for the \0 in the main array
+    args = (char**)malloc(sizeof(char*) * argCount); //Do I need to account for \0?
+    
+    for (int i = 0; i < len; i++) {
+        args[i] = (char*) malloc(len * sizeof(char));
+    }
 
+    //add each argument to args individually
     for(int i = 0; i < argCount;  i++){
         //Run once for each word
         while(*string == ' ') string = string + 1; //make sure next while loop starts on the first character
         printf("First character is '%c'\n", *string);
-        while(*string != ' ' && *string != '\0' && *string != '\n'){
-            string = string + 1;
+        int argLen = 0;
+        while(*(string+argLen) != ' ' && *(string+argLen) != '\0' && *(string+argLen) != '\n'){ //using argLen instead of incrementing string to keep string at the start for adding to args[]
+            argLen = argLen + 1; //reset every word
         }
+        strncpy(args[i], string, argLen); //add the argument to arfs
+        
+        printf("%s\n", args[i]);
+
+        string = string + argLen; //move on to the next word
     }
 
 
+    for (int i = 0; i < argCount; i++) {
+        free(args[i]);
+    }
     free(args);
 }
-
