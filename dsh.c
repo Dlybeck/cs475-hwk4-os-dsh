@@ -27,40 +27,38 @@ void example(int* x) {
     //*x = thisIsGlobal;
 } 
 
-void countArgs(int* args, char* string){
+void countArgs(int* args, int* maxLen, char* string){
     char* currentChar = string;
+    int len = -1;
 
     while(*currentChar != '\0'){
         if(*currentChar == ' '){
+            len = 0;
             if(*(currentChar+1) != ' ') {
                 *args = *args + 1;
             }
         }
+        else{
+            len = len + 1;
+            if(len > *maxLen) *maxLen = len;
+        }
         currentChar++;
     }
-
 }
 
 void processArgs (char* string){
     int argCount = 1;
+    int len = 0;
     char** args = NULL;
     char* argStart = string; //should be equal to the start of every arg
     char* currentArg = string; //character being looked at
     int argLen = 0;
 
-    countArgs(&argCount, string);
+    countArgs(&argCount, &len, string);
     printf("Number of arguments is %d\n", argCount);
+    printf("Longest word is %d long", len);
 
-    /*while(*currentArg!='\n' && *currentArg!='\0'){
-        if(currentArg == ' '){
-            currentArg++;
-            argStart = currentArg;
-            argLen = 0;
-        }
-        else{
-            
-        }
-    }*/
+    
 
 
 }
