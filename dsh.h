@@ -6,5 +6,7 @@
 // TODO: Function declarations go below
 void example(int*); // delete before submission
 
+void countArgs(int*, char*);
+
 void processArgs(char*);
 
