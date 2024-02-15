@@ -46,20 +46,33 @@ void countArgs(int* args, int* maxLen, char* string){
     }
 }
 
+void getArgLength(int* len, char* arg){
+
+}
+
 void processArgs (char* string){
     int argCount = 1;
     int len = 0;
-    char** args = NULL;
+    char** args;
     char* argStart = string; //should be equal to the start of every arg
     char* currentArg = string; //character being looked at
-    int argLen = 0;
 
     countArgs(&argCount, &len, string);
     printf("Number of arguments is %d\n", argCount);
-    printf("Longest word is %d long", len);
+    printf("Longest word is %d long\n", len);
 
-    
+    args = (char**)malloc((len + 1)*argCount + 1); //argcount for the \0 in each arg and 1 for the \0 in the main array
+
+    for(int i = 0; i < argCount;  i++){
+        //Run once for each word
+        while(*string == ' ') string = string + 1; //make sure next while loop starts on the first character
+        printf("First character is '%c'\n", *string);
+        while(*string != ' ' && *string != '\0' && *string != '\n'){
+            string = string + 1;
+        }
+    }
 
 
+    free(args);
 }
 
