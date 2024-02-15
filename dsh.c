@@ -80,8 +80,5 @@ void processArgs (char* string){
     }
 
 
-    for (int i = 0; i < argCount; i++) {
-        free(args[i]);
-    }
-    free(args);
+    free(args); //Does this free all of it or do I need a for loop to remove the inner arrays too?
 }
