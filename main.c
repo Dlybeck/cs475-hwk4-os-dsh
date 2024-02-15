@@ -26,13 +26,33 @@ int main(int argc, char *argv[]) {
 
 
 	char *cmdline = (char*) malloc(MAXBUF); // stores user input from commmand line
-
+	int run = 0;
 	while(1){
-		printf("dsh> ");
+		if(run > 0){
+			printf("dsh> ");
 		
-		if(fgets(cmdline, MAXBUF, stdin) != NULL){
-			processArgs(cmdline);
+			if(fgets(cmdline, MAXBUF, stdin) != NULL){
+				char** args;
+				args = processArgs(cmdline);
+
+				if(strcmp(args[0], "exit") == 0){
+					exit(0);
+				}
+
+				/*int argCount = 1;
+				int argLen = 0;
+				countArgs(&argCount, &argLen, cmdline);
+
+				printf("There are %d arguments ", argCount);
+
+				for(int i = 0; i < argCount; i++){
+					free(args[i]);
+				}*/
+
+				free(args);
+			}
 		}
+		run = 1;
 	}
 
 	return 0;

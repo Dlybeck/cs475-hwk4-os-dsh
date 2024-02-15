@@ -46,39 +46,57 @@ void countArgs(int* args, int* maxLen, char* string){
     }
 }
 
-void processArgs (char* string){
+void freeArgs(char** args){
+    free(args); //free the entire variable
+}
+
+char** processArgs (char* string){
+    printf("Read in %s", string);
     int argCount = 1;
     int len = 0;
     char** args;
-    char* argStart = string; //should be equal to the start of every arg
-    char* currentArg = string; //character being looked at
 
     countArgs(&argCount, &len, string);
-    printf("Number of arguments is %d\n", argCount);
-    printf("Longest word is %d long\n", len);
 
+    //printf("Number of arguments is %d\n", argCount);
+    //printf("Longest word is %d long\n", len);
+
+    len = len + 1; //Account for the \0
     args = (char**)malloc(sizeof(char*) * argCount); //Do I need to account for \0?
-    
+
     for (int i = 0; i < len; i++) {
         args[i] = (char*) malloc(len * sizeof(char));
     }
 
     //add each argument to args individually
     for(int i = 0; i < argCount;  i++){
+        printf("On run %d ", i + 1);
         //Run once for each word
         while(*string == ' ') string = string + 1; //make sure next while loop starts on the first character
-        printf("First character is '%c'\n", *string);
-        int argLen = 0;
-        while(*(string+argLen) != ' ' && *(string+argLen) != '\0' && *(string+argLen) != '\n'){ //using argLen instead of incrementing string to keep string at the start for adding to args[]
-            argLen = argLen + 1; //reset every word
+        //printf("First character is '%c'\n", *string);
+
+        int argLen = 0; ; //reset every word
+        //Find the length of each individual word
+        //using argLen instead of incrementing string to keep string at the start for adding to args[]
+        while(*(string+argLen) != ' ' && *(string+argLen) != '\0' && *(string+argLen) != '\n'){ 
+            argLen = argLen + 1;
         }
-        strncpy(args[i], string, argLen); //add the argument to arfs
+        strncpy(args[i], string, argLen); //add the argument to args
         
-        printf("%s\n", args[i]);
+        int j = 0;
+        while(args[i][j] != '\0'){
+            printf("'%c' ", args[i][j]);
+            j++;
+        }
+        printf("\n");
 
         string = string + argLen; //move on to the next word
     }
 
+    for(int i = 0; i < argCount;  i++){
+        printf("'%s' ", args[i]);
+    }
 
-    free(args); //Does this free all of it or do I need a for loop to remove the inner arrays too?
+    printf("\n");
+    return args;
 }
