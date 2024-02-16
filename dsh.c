@@ -46,10 +46,6 @@ void countArgs(int* args, int* maxLen, char* string){
     }
 }
 
-void freeArgs(char** args){
-    free(args); //free the entire variable
-}
-
 char** processArgs (char* string){
     printf("Read in %s", string);
     int argCount = 1;
@@ -61,34 +57,34 @@ char** processArgs (char* string){
     //printf("Number of arguments is %d\n", argCount);
     //printf("Longest word is %d long\n", len);
 
-    len = len + 1; //Account for the \0
     args = (char**)malloc(sizeof(char*) * argCount); //Do I need to account for \0?
 
-    for (int i = 0; i < len; i++) {
-        args[i] = (char*) malloc(len * sizeof(char));
-    }
+    // make room for \0
+    len = len + 1; 
 
-    //add each argument to args individually
-    for(int i = 0; i < argCount;  i++){
-        printf("On run %d ", i + 1);
-        //Run once for each word
+    for (int i = 0; i < argCount; i++) {
+        args[i] = (char*) malloc((len + 1) * sizeof(char)); //IDK why +1 since already added before, but it fixes errors
+
+        //add each argument to args individually
         while(*string == ' ') string = string + 1; //make sure next while loop starts on the first character
-        //printf("First character is '%c'\n", *string);
 
-        int argLen = 0; ; //reset every word
-        //Find the length of each individual word
-        //using argLen instead of incrementing string to keep string at the start for adding to args[]
+        int argLen = 0;
+        // Find the length of each individual word
         while(*(string+argLen) != ' ' && *(string+argLen) != '\0' && *(string+argLen) != '\n'){ 
             argLen = argLen + 1;
         }
-        strncpy(args[i], string, argLen); //add the argument to args
-        
-        int j = 0;
+
+        //argLen already accounts for null terminator (When used as index)
+        strncpy(args[i], string, argLen);\
+
+        args[i][argLen] = '\0'; //Add the null-terminator
+
+        /*int j = 0;
         while(args[i][j] != '\0'){
             printf("'%c' ", args[i][j]);
             j++;
         }
-        printf("\n");
+        printf("\n");*/
 
         string = string + argLen; //move on to the next word
     }
@@ -99,4 +95,15 @@ char** processArgs (char* string){
 
     printf("\n");
     return args;
+}
+
+void freeArgs(char* cmdline, char** args){
+    int argCount = 1;
+    int argLen = 0;
+    countArgs(&argCount, &argLen, cmdline);
+    //printf("There are %d arguments\n", argCount);
+    for(int i = 0; i < argCount; i++){
+        free(args[i]);
+    }
+    free(args);
 }

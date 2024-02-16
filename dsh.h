@@ -7,5 +7,5 @@ void countArgs(int*, int*, char*);
 
 char** processArgs(char*);
 
-void freeArgs(char**);
+void freeArgs(char*, char**);
 

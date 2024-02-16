@@ -39,17 +39,7 @@ int main(int argc, char *argv[]) {
 					exit(0);
 				}
 
-				/*int argCount = 1;
-				int argLen = 0;
-				countArgs(&argCount, &argLen, cmdline);
-
-				printf("There are %d arguments ", argCount);
-
-				for(int i = 0; i < argCount; i++){
-					free(args[i]);
-				}*/
-
-				free(args);
+				freeArgs(cmdline, args);
 			}
 		}
 		run = 1;
