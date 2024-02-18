@@ -9,3 +9,7 @@ char** processArgs(char*);
 
 void freeArgs(char*, char**);
 
+void checkExit(char*, char**);
+
+void checkCWD(char**);
+

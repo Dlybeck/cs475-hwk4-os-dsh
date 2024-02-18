@@ -27,6 +27,20 @@ void example(int* x) {
     //*x = thisIsGlobal;
 } 
 
+void checkExit(char* cmdline, char** args){
+    if(strcmp(args[0], "exit") == 0){
+        freeArgs(cmdline, args);
+        exit(0);
+	}
+}
+
+void checkCWD(char** args){
+    if(strcmp(args[0], "cwd") == 0){
+        char cwd[32768]; //Max path size?
+        printf("%s\n", getcwd(cwd, sizeof(cwd)));
+	}
+}
+
 void countArgs(int* args, int* maxLen, char* string){
     char* currentChar = string;
     int len = -1;

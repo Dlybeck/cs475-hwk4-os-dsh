@@ -34,11 +34,8 @@ int main(int argc, char *argv[]) {
 			if(fgets(cmdline, MAXBUF, stdin) != NULL){
 				char** args;
 				args = processArgs(cmdline);
-
-				if(strcmp(args[0], "exit") == 0){
-					exit(0);
-				}
-
+				checkExit(cmdline, args);
+				checkCWD(args);
 				freeArgs(cmdline, args);
 			}
 		}
