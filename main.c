@@ -26,6 +26,7 @@ int main(int argc, char *argv[]) {
 
 
 	char *cmdline = (char*) malloc(MAXBUF); // stores user input from commmand line
+	char *cwd = (char*) malloc((MAX_PATH+1) * sizeof(char));
 	int run = 0;
 	while(1){
 		if(run > 0){
@@ -35,7 +36,7 @@ int main(int argc, char *argv[]) {
 				char** args;
 				args = processArgs(cmdline);
 				checkExit(cmdline, args);
-				checkCWD(args);
+				checkCWD(cwd, args);
 				freeArgs(cmdline, args);
 			}
 		}

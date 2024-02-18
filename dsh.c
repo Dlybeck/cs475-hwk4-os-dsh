@@ -34,10 +34,12 @@ void checkExit(char* cmdline, char** args){
 	}
 }
 
-void checkCWD(char** args){
-    if(strcmp(args[0], "cwd") == 0){
-        char cwd[32768]; //Max path size?
-        printf("%s\n", getcwd(cwd, sizeof(cwd)));
+void checkCWD(char* cwd, char** args){
+    if(strcmp(args[0], "pwd") == 0){
+        char cwdArray[32768]; //Max path size?
+        cwd[MAX_PATH] = '\0';
+        sprintf(cwd, "%s\n", getcwd(cwdArray, sizeof(cwdArray)));
+        printf("%s", cwd);
 	}
 }
 
