@@ -1,16 +1,21 @@
 #define MAXBUF 256  // max number of characteres allowed on command line
 #define MAX_PATH 32768
 
-// TODO: Function declarations go below
-void example(int*); // delete before submission
+int mode1(char**);
+
+int mode2(char**);
+
+int checkCD(char**);
 
 void countArgs(int*, int*, char*);
 
-char** processArgs(char*);
-
-void freeArgs(char*, char**);
+char** split(char*);
 
 void checkExit(char*, char**);
 
-void checkCWD(char*, char**);
+int checkCWD(char*, char**);
+
+void freeArgs(char*, char**);
+
+int getArgCount();
 

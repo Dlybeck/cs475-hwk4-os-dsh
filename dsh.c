@@ -16,16 +16,24 @@
 #include <sys/stat.h>
 #include <string.h>
 
+int argCount;
 
-// TODO: Your function definitions below (declarations in dsh.h)
+int mode1(char** args){
+    
+}
 
-/**
- * This is just an example. Delete this before 
- * submission.
- */
-void example(int* x) {
-    //*x = thisIsGlobal;
-} 
+int mode2(char** args){
+    
+}
+
+int checkCD(char** args){
+    if(strcmp(args[0], "cd") == 0 && getArgCount(args) > 1){
+        if (chdir(args[1]) != 0) 
+            printf("%s is not a valid directory\n", args[1]); 
+        return 1;
+    }
+    return 0;
+}
 
 void checkExit(char* cmdline, char** args){
     if(strcmp(args[0], "exit") == 0){
@@ -34,13 +42,15 @@ void checkExit(char* cmdline, char** args){
 	}
 }
 
-void checkCWD(char* cwd, char** args){
+int checkCWD(char* cwd, char** args){
     if(strcmp(args[0], "pwd") == 0){
         char cwdArray[32768]; //Max path size?
         cwd[MAX_PATH] = '\0';
         sprintf(cwd, "%s\n", getcwd(cwdArray, sizeof(cwdArray)));
         printf("%s", cwd);
-	}
+        return 1;
+    }
+    return 0;
 }
 
 void countArgs(int* args, int* maxLen, char* string){
@@ -62,9 +72,9 @@ void countArgs(int* args, int* maxLen, char* string){
     }
 }
 
-char** processArgs (char* string){
-    printf("Read in %s", string);
-    int argCount = 1;
+char** split (char* string){
+    //printf("Read in %s", string);
+    argCount = 1;
     int len = 0;
     char** args;
 
@@ -95,21 +105,14 @@ char** processArgs (char* string){
 
         args[i][argLen] = '\0'; //Add the null-terminator
 
-        /*int j = 0;
-        while(args[i][j] != '\0'){
-            printf("'%c' ", args[i][j]);
-            j++;
-        }
-        printf("\n");*/
-
         string = string + argLen; //move on to the next word
     }
 
-    for(int i = 0; i < argCount;  i++){
+    /*for(int i = 0; i < argCount;  i++){
         printf("'%s' ", args[i]);
     }
+    printf("\n");*/
 
-    printf("\n");
     return args;
 }
 
@@ -122,4 +125,8 @@ void freeArgs(char* cmdline, char** args){
         free(args[i]);
     }
     free(args);
+}
+
+int getArgCount(){
+    return argCount;
 }
