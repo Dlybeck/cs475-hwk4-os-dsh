@@ -18,12 +18,18 @@
 
 int argCount;
 
-int mode1(char** args){
-    
+void mode1(char** args){
+    if (access(args[0], F_OK | X_OK) == 0) {
+        // File exists and is executable! Can run!
+    }
+    else {
+        printf("Cannot find or execute this file");
+    }
 }
 
-int mode2(char** args){
-    
+void mode2(char** args, char* cwd){
+    checkCWD(cwd, args);
+	checkCD(args);
 }
 
 int checkCD(char** args){

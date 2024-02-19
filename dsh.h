@@ -1,9 +1,9 @@
 #define MAXBUF 256  // max number of characteres allowed on command line
 #define MAX_PATH 32768
 
-int mode1(char**);
+void mode1(char**);
 
-int mode2(char**);
+void mode2(char**, char*);
 
 int checkCD(char**);
 

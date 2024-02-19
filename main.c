@@ -33,20 +33,15 @@ int main(int argc, char *argv[]) {
 			printf("dsh> ");
 		
 			if(fgets(cmdline, MAXBUF, stdin) != NULL){
-				int output = 0;
 				char** args;
 				args = split(cmdline);
 
 				checkExit(cmdline, args);
-				output += checkCWD(cwd, args);
-				output += checkCD(args);
 				
 				if(args[0][0] == '/')
-					output += mode1(args);
+					mode1(args);
 				else
-					output += mode2(args);
-
-				if(output == 0) printf("'%s' is not a valid command\n", args[0]);
+					mode2(args, cwd);
 
 				freeArgs(cmdline, args);
 			}
