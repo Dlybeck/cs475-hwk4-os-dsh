@@ -37,12 +37,12 @@ int main(int argc, char *argv[]) {
 				args = split(cmdline);
 
 				checkExit(cmdline, args);
-				
-				if(args[0][0] == '/')
-					mode1(args);
-				else
-					mode2(args, cwd);
-
+				if(args[0][0] != '\0'){ //make sure the entry is not empty
+					if(args[0][0] == '/')
+						mode1(args);
+					else
+						mode2(args, cwd);
+				}
 				freeArgs(cmdline, args);
 			}
 		}

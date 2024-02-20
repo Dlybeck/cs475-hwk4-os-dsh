@@ -19,13 +19,16 @@
 int argCount;
 
 void mode1(char** args){
-    // Find the end of the path argument
-    int i = 0;
-    char *last_arg = NULL;
-    while (args[0][i] != '\0') {
-        last_arg = &args[0][i];
-        i++;
+    // Find the end of the path argument and check for &
+    int background;
+    if(args[argCount-1][0] == '&'){
+        printf("There is a trailing &\n");
+        background = 1;
+        args[argCount-1][0] = '\0';
+        args[argCount-1] = NULL;
+        argCount = argCount - 1;
     }
+    else background = 0;
 
     // Check if it's executable
     if (access(args[0], F_OK | X_OK) == 0) {
@@ -33,29 +36,85 @@ void mode1(char** args){
         char *path = (char*)malloc(strlen(args[0]) + 1);
         strcpy(path, args[0]);
 
-        if (*last_arg == '&') {
-            *last_arg = '\0'; // Remove ampersand
-        }
-
         // Fork and execute
         pid_t pid = fork();
-        if (pid == 0) {
+        if (pid > 0) {
+            //parent
+            printf("Background is %d\n", background);
+            if(background == 0){
+                printf("Waiting...\n");
+                wait(NULL);
+            }  
+        }
+        else if (pid == 0) {
             // Child process
             execv(path, args);
-        } else if (pid > 0) {
-            //parent
-            wait(NULL);
         }
 
         free(path);
     } else {
-        printf("Cannot find or execute this file: %s\n", args[0]);
+        printf("ERROR: %s not found!\n", args[0]);
     }
 }
 
 void mode2(char** args, char* cwd){
-    checkCWD(cwd, args);
-	checkCD(args);
+    printf("First character is %c\n", args[0][0]);
+    int done = 0;
+    done += checkCWD(cwd, args);
+    done += checkCD(args);
+
+    if(done > 0) return;
+
+    // Find the end of the path argument and check for &
+    int background;
+    if(args[argCount-1][0] == '&'){
+        printf("There is a trailing &\n");
+        background = 1;
+        args[argCount-1][0] = '\0';
+        args[argCount-1] = NULL;
+        argCount = argCount - 1;
+    }
+    else background = 0;
+
+    char string[102]; //:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin is 101 characters long
+    strcpy(string, ":/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin");
+    string[101] = '\0';
+
+    char* nextPath = (char*)malloc(sizeof(char) * (16 + 1 + 100 + 1)); //16 for the longest location above, 1 for /, 100 for argument (idk how long), 1 for \0
+
+    //Find each location to check
+    char* location = strtok(string, ":");
+    int ran = 0;
+    while(location != NULL && ran == 0){
+        strcpy(nextPath, location);
+        strcat(nextPath, "/");
+        strcat(nextPath, args[0]);
+
+        // Check if it's executable
+        if (access(nextPath, F_OK | X_OK) == 0) {
+            // Fork and execute
+            pid_t pid = fork();
+            if (pid > 0) {
+                //parent
+                printf("Background is %d\n", background);
+                if(background == 0){
+                    printf("Waiting...\n");
+                    wait(NULL);
+                }  
+            }
+            else if (pid == 0) {
+                // Child process
+                execv(nextPath, args);
+            }
+            ran = 1; //the file was ran!
+        }
+
+        location = strtok(NULL, ":");
+    }
+    if(ran == 0) printf("ERROR: %s not found!\n", args[0]);
+
+    free(nextPath);
+
 }
 
 int checkCD(char** args){
