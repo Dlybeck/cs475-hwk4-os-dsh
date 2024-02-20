@@ -19,11 +19,37 @@
 int argCount;
 
 void mode1(char** args){
-    if (access(args[0], F_OK | X_OK) == 0) {
-        // File exists and is executable! Can run!
+    // Find the end of the path argument
+    int i = 0;
+    char *last_arg = NULL;
+    while (args[0][i] != '\0') {
+        last_arg = &args[0][i];
+        i++;
     }
-    else {
-        printf("Cannot find or execute this file");
+
+    // Check if it's executable
+    if (access(args[0], F_OK | X_OK) == 0) {
+        // Separate path from arguments
+        char *path = (char*)malloc(strlen(args[0]) + 1);
+        strcpy(path, args[0]);
+
+        if (*last_arg == '&') {
+            *last_arg = '\0'; // Remove ampersand
+        }
+
+        // Fork and execute
+        pid_t pid = fork();
+        if (pid == 0) {
+            // Child process
+            execv(path, args);
+        } else if (pid > 0) {
+            //parent
+            wait(NULL);
+        }
+
+        free(path);
+    } else {
+        printf("Cannot find or execute this file: %s\n", args[0]);
     }
 }
 
@@ -89,8 +115,7 @@ char** split (char* string){
     //printf("Number of arguments is %d\n", argCount);
     //printf("Longest word is %d long\n", len);
 
-    args = (char**)malloc(sizeof(char*) * argCount); //Do I need to account for \0?
-
+    args = (char**)malloc(sizeof(char*) * (argCount + 1));
     // make room for \0
     len = len + 1; 
 
@@ -109,10 +134,12 @@ char** split (char* string){
         //argLen already accounts for null terminator (When used as index)
         strncpy(args[i], string, argLen);\
 
+
         args[i][argLen] = '\0'; //Add the null-terminator
 
         string = string + argLen; //move on to the next word
     }
+    args[argCount] = NULL;
 
     /*for(int i = 0; i < argCount;  i++){
         printf("'%s' ", args[i]);
