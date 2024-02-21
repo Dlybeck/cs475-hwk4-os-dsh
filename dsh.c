@@ -105,7 +105,10 @@ void mode2(char** args, char* cwd){
 int checkCD(char** args){
     if(strcmp(args[0], "cd") == 0 && getArgCount(args) > 1){
         if (chdir(args[1]) != 0) 
-            printf("%s is not a valid directory\n", args[1]); 
+        return 1;
+    }
+    else if(strcmp(args[0], "cd") == 0){
+        chdir(getenv("HOME"));
         return 1;
     }
     return 0;

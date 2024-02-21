@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
 
 				checkExit(cmdline, args);
 				if(args[0][0] != '\0'){ //make sure the entry is not empty
-					if(args[0][0] == '/')
+					if(args[0][0] == '/' || args[0][0] == '.')
 						mode1(args);
 					else
 						mode2(args, cwd);
