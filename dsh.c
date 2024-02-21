@@ -18,47 +18,54 @@
 
 int argCount;
 
-void mode1(char** args){
-    // Find the end of the path argument and check for &
-    int background;
+void createProcess(char** args, char* path, int background) {
+    pid_t pid = fork();
+    if (pid == 0) {
+        // Child process
+        execv(path, args); //will always execute the new process
+        exit(1);
+    } else {
+        // Parent process
+        if (background == 0) {
+            // Wait for the correct process (I don't understand why I have to use this but it fixed my errors)
+            waitpid(pid, NULL, 0);
+        }
+    }
+}
+
+
+
+int checkForWait(char** args){
     if(args[argCount-1][0] == '&'){
         printf("There is a trailing &\n");
-        background = 1;
         args[argCount-1][0] = '\0';
         args[argCount-1] = NULL;
         argCount = argCount - 1;
+        return 1;
     }
-    else background = 0;
+    else return 0;
+}
 
+void mode1(char** args){
+    // Find the end of the path argument and check for &
+    int background = checkForWait(args);
+    
     // Check if it's executable
     if (access(args[0], F_OK | X_OK) == 0) {
         // Separate path from arguments
         char *path = (char*)malloc(strlen(args[0]) + 1);
         strcpy(path, args[0]);
 
-        // Fork and execute
-        pid_t pid = fork();
-        if (pid > 0) {
-            //parent
-            printf("Background is %d\n", background);
-            if(background == 0){
-                printf("Waiting...\n");
-                wait(NULL);
-            }  
-        }
-        else if (pid == 0) {
-            // Child process
-            execv(path, args);
-        }
+        createProcess(args, path, background);
 
         free(path);
-    } else {
+    } 
+    else {
         printf("ERROR: %s not found!\n", args[0]);
     }
 }
 
 void mode2(char** args, char* cwd){
-    printf("First character is %c\n", args[0][0]);
     int done = 0;
     done += checkCWD(cwd, args);
     done += checkCD(args);
@@ -66,15 +73,7 @@ void mode2(char** args, char* cwd){
     if(done > 0) return;
 
     // Find the end of the path argument and check for &
-    int background;
-    if(args[argCount-1][0] == '&'){
-        printf("There is a trailing &\n");
-        background = 1;
-        args[argCount-1][0] = '\0';
-        args[argCount-1] = NULL;
-        argCount = argCount - 1;
-    }
-    else background = 0;
+    int background = checkForWait(args);
 
     char string[102]; //:/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin is 101 characters long
     strcpy(string, ":/opt/local/bin:/opt/local/sbin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/usr/texbin");
@@ -92,23 +91,9 @@ void mode2(char** args, char* cwd){
 
         // Check if it's executable
         if (access(nextPath, F_OK | X_OK) == 0) {
-            // Fork and execute
-            pid_t pid = fork();
-            if (pid > 0) {
-                //parent
-                printf("Background is %d\n", background);
-                if(background == 0){
-                    printf("Waiting...\n");
-                    wait(NULL);
-                }  
-            }
-            else if (pid == 0) {
-                // Child process
-                execv(nextPath, args);
-            }
+            createProcess(args, nextPath, background);
             ran = 1; //the file was ran!
         }
-
         location = strtok(NULL, ":");
     }
     if(ran == 0) printf("ERROR: %s not found!\n", args[0]);

@@ -13,7 +13,7 @@
 #include <string.h>
 #include "dsh.h"
 
-#define MAX_PROC 250
+#define MAX_PROC 500
 
 int main(int argc, char *argv[]) {
 
