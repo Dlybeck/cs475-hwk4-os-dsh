@@ -33,14 +33,9 @@ void createProcess(char** args, char* path, int background) {
     }
 }
 
-
-
 int checkForWait(char** args){
     if(args[argCount-1][0] == '&'){
-        printf("There is a trailing &\n");
-        args[argCount-1][0] = '\0';
         args[argCount-1] = NULL;
-        argCount = argCount - 1;
         return 1;
     }
     else return 0;
