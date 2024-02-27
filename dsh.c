@@ -33,9 +33,15 @@ void createProcess(char** args, char* path, int background) {
     }
 }
 
+
+
 int checkForWait(char** args){
     if(args[argCount-1][0] == '&'){
+        printf("There is a trailing &\n");
+        // Free memory allocated for the last argument
+        free(args[argCount-1]);
         args[argCount-1] = NULL;
+        argCount = argCount - 1;
         return 1;
     }
     else return 0;
@@ -196,7 +202,7 @@ void freeArgs(char* cmdline, char** args){
     int argLen = 0;
     countArgs(&argCount, &argLen, cmdline);
     //printf("There are %d arguments\n", argCount);
-    for(int i = 0; i < argCount; i++){
+     for(int i = 0; i < argCount; i++){
         free(args[i]);
     }
     free(args);
