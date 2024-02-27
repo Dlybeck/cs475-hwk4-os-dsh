@@ -37,8 +37,8 @@ void createProcess(char** args, char* path, int background) {
 
 int checkForWait(char** args){
     if(args[argCount-1][0] == '&'){
-        printf("There is a trailing &\n");
-        // Free memory allocated for the last argument
+        //printf("There is a trailing &\n");
+        // Free memory allocated for the & at the end
         free(args[argCount-1]);
         args[argCount-1] = NULL;
         argCount = argCount - 1;
